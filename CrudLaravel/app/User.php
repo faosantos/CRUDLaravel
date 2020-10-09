@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,4 +40,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+     //Para fazermos o relacionamento entre as classes vamos criar um método no model para isso. Dentro de User.php ficará assim:
+     public function relBooks(){
+        return $this->hasMany('App\Models\ModelBook','id_user');
+    }
 }

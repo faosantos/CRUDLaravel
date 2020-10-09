@@ -3,17 +3,31 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\ModelBook;
+use App\User;
 
 class BookController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    //Criando metodos construtores
+
+    private $objUser;
+    private $objBook;
+
+    public function __construct()
+    {
+        $this->objUser=new User();
+        $this->objBook=new ModelBook();
+    }
+    
     public function index()
     {
-        return view('index');
+        // Para ordernar os dados na tabela de forma crescente ou decrescente, basta na variável $book do método index adicionar o método sortBy, assim:
+        // $book=$this->objBook->all()->sortByDesc('id'); ordena do ultimo ID para o primeiro
+        // $book=$this->objBook->all()->sortBy('title'); ordena pelo nome do titulo
+        
+        $book=$this->objBook->all();
+        return view('index',compact('book'));
     }
 
     /**
@@ -23,7 +37,8 @@ class BookController extends Controller
      */
     public function create()
     {
-        //
+        $users=$this->objUser->all();
+        return view('create',compact('users'));
     }
 
     /**
@@ -34,7 +49,15 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $cad=$this->objBook->create([
+            'title'=>$request->title,
+            'pages'=>$request->pages,
+            'price'=>$request->price,
+            'id_user'=>$request->id_user
+         ]);
+         if($cad){
+             return redirect('books');
+         }
     }
 
     /**
@@ -45,7 +68,8 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        //
+        $book=$this->objBook->find($id);
+        return view('show',compact('book'));
     }
 
     /**
